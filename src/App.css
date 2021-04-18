@@ -1,39 +1,153 @@
-.App {
-  text-align: center;
+@import '~antd/dist/antd.css';
+
+* {
+  margin: 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-float infinite 3s ease-in-out;
-  }
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
-.App-header {
-  min-height: 100vh;
+.app {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgb(168, 173, 182);
   display: flex;
+  /* place-items: center; */
+}
+
+
+/* Form-Styles */
+.form-card {
+  width: 20%;
+  height: fit-content;
+  background-color: rgb(232, 234, 237);
+  border-radius: 12px;
+  padding: 30px;
+}
+
+.form-element {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  text-align: center;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
 }
 
-.App-link {
-  color: rgb(112, 76, 182);
+.name-input {
+    background: none;
+    /* border: none; */
+    flex: 1;
+    /* margin-top: 10%; */
+  }
+/*   
+  input:focus {
+    outline: none;
+  } */
+  
+  .error-span {
+    color: red;
+    margin-bottom: 10%;
 }
 
-@keyframes App-logo-float {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(10px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
+.forms-margin {
+  height: 100px;
 }
+
+
+/* Users-Styles */
+.users-card {
+  /* background-color: darkslategrey; */
+  /* background-color: rgb(232, 234, 237); */
+  width: 75%;
+  height: 80vh;
+  border-radius: 10px;
+  margin-left: 2%;
+  /* padding: 10px 0; */
+}
+
+.users-list {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  background-color: darkolivegreen;
+  /* background-color: rgb(232, 234, 237); */
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.users-list li {
+  list-style-type: none;
+  /* background-color: red; */
+  width: 120px;
+  height: 120px;
+  /* display: flex; */
+  flex-direction: column;
+  place-items: center;
+  padding: 10px;
+  padding-left: 2%;
+}
+
+.image-card {
+  margin-top: 2%;
+  width: 80px;
+  height: 80px;
+  border-radius: 60px;
+}
+
+
+/* For Documents */
+
+.docs-list {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  background-color: darkolivegreen;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.docs-list li {
+  list-style-type: none;
+  background-color: lightgray;
+  width: 150px;
+  height: 200px;
+  /* overflow: hidden; */
+  /* display: flex; */
+  flex-direction: column;
+  place-items: center;
+  text-align: center;
+  margin: 10px;
+}
+
+.doc-card {
+  /* width: 150px;
+  height: 120px;
+  overflow: hidden; */
+
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+/* Hide scrolbar for chrome, safari and opera */
+/* .doc-card::-webkit-scrollbar {
+  display: none;
+} */
+
+/* Hide scrolbar for IE, Edge and Firefox */
+/* .doc-card {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+} */
