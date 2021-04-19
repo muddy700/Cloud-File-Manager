@@ -1,24 +1,43 @@
 import {React, useState, useEffect}  from 'react'
 import './App.css';
 import firebaseApp from './firebase'
+import { fetchAllUsers, addUser } from './app/api'
 
 const App = () => {
+
+  //For API Form
+  const initialUser = {
+    name: '',
+    image: null,
+    report: null
+  }
+  const [apiUser, setApiUser] = useState(initialUser)
+  const [apiUsers, setApiUsers] = useState([])
+  const [apiNameError, setApiNameError] = useState('')
+  const [apiImageError, setApiImageError] = useState('')
+  const [apiReportError, setApiReportError] = useState('')
+  
+  //For Image Form
   const [username, setUsername] = useState('')
   const [image, setImage] = useState(null)
   const [users, setUsers] = useState([])
-  const [doc, setDoc] = useState(null)
-  const [docsList, setDocsList] = useState([])
-  const [docError, setDocError] = useState(false)
-  const [docErrorMessage, setDocErrorMessage] = useState('')
-  const [uploadProgress, setUploadProgress] = useState(0)
   const [fileError, setFileError] = useState(false)
   const [fileErrorMessage, setFileErrorMessage] = useState('sample')
   const [usernameError, setUsernameError] = useState(false)
   const [usernameErrorMessage, setusernameErrorMessage] = useState('error message')
 
+  //For Document Form
+  const [doc, setDoc] = useState(null)
+  const [docsList, setDocsList] = useState([])
+  const [docError, setDocError] = useState(false)
+  const [docErrorMessage, setDocErrorMessage] = useState('')
+
+  //For Image And Document Forms Storage
+  const [uploadProgress, setUploadProgress] = useState(0)
   const db = firebaseApp.firestore();
   const storage = firebaseApp.storage();
 
+  //For Image Form Functions
   const handleFileChanges = (e) => {
     setImage(e.target.files[0])
     setFileError(false)
@@ -87,7 +106,9 @@ const App = () => {
       console.log('Image Form Is Not Valid')
     }
   }
-
+  //Image Form Functions Ends Up Here
+  
+  //For Document Form Functions
   const handleDocChanges = (e) => {
     setDoc(e.target.files[0]);
     setDocError(false);
@@ -141,7 +162,91 @@ const App = () => {
       console.log('Doc Form Is Not Valid')
     }
   }
+  //Document Form Functions Ends Up Here
+  
+  
+  //Functions For API Module
+  const handleApiForm = (e) => {
+    // console.log('API Form Has Changed')
+    if (e.target.name === 'name') {
+      setApiUser({ ...apiUser, name: e.target.value })
+      setApiNameError('')
+    }
+    else if (e.target.name === 'image') {
+      setApiUser({ ...apiUser, image: e.target.files[0] })
+      setApiImageError('')
+    }
+    else if (e.target.name === 'report') {
+      setApiUser({ ...apiUser, report: e.target.files[0] })
+      setApiReportError('')
+    }
+    else {
+      console.log('Nothing Has Changed In  Api Form')
+    }
+  }
 
+  const validateApiForm = (e) => {
+    e.preventDefault();
+    const allowedDocFormats = /(\.pdf)$/i;
+    const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+
+    if (!apiUser.name) {
+      setApiNameError('Name Cannot Be Blank!')
+      return false;
+    }
+    else if (!apiUser.image) {
+      setApiImageError('Image Cannot Be Blank!')
+      return false;
+    }
+    else if (!apiUser.report) {
+      setApiReportError('Report Cannot Be Blank!')
+      return false;
+    }
+    else if (!allowedExtensions.exec(apiUser.image.name)) {
+      setApiImageError('UnSupported File Extension!')
+      return false;
+    }
+    else if (!allowedDocFormats.exec(apiUser.report.name)) {
+      setApiReportError('UnSupported Document Type!')
+      return false;
+    }
+    else { return true;}
+  }
+  
+  const sendApiData = async (e) => {
+    e.preventDefault();
+    const isApiUserValid = validateApiForm(e);
+    
+    if (isApiUserValid) {
+      const config = {
+        headers: { 'Content-Type': 'multipart/form-data' } }
+      console.log(apiUser)
+      const formdata = new FormData();
+      formdata.append('name', apiUser.name)
+      formdata.append('image', apiUser.image)
+      formdata.append('report', apiUser.report)
+      try {
+        const response = await addUser(formdata, config)
+        console.log(response)
+        document.getElementById('apiForm').reset();
+        setApiUser(initialUser)
+        // setApiUsers(response)
+      } catch (err) { console.log('Error Adding User: ' + err)}
+    }
+    else {
+      console.log('API Form Is Invalid')
+    }
+  }
+
+  //Fetch Data For API Module
+  const fetchApiData = async () => {
+    try {
+      const response = await fetchAllUsers()
+      setApiUsers(response)
+    } catch (err) { console.log('Error Fetching Users: ' + err)}
+  }
+
+  //Fetch data For Image Module
   const fetchUsers =  () => {
     const usersCollection = db.collection("users")
     usersCollection.onSnapshot((snapshot) => (
@@ -149,6 +254,7 @@ const App = () => {
     ))
   }
   
+  //Fetch Data For Document Module
   const fetchDocuments =  () => {
     const docsCollection = db.collection("MyDocx")
     docsCollection.onSnapshot((snapshot) => (  
@@ -159,7 +265,10 @@ const App = () => {
   useEffect(() => {
     fetchUsers();
     fetchDocuments();
+    fetchApiData();
   }, [])
+
+
 
     return (
       <div className="app">
@@ -188,8 +297,34 @@ const App = () => {
             <button type="submit">Submit</button>
           </form>
 
+          <div className="forms-margin"></div>
+
+          <form className="form-element"
+            onSubmit={sendApiData}
+            id="apiForm"
+            enctype="multipart/form-data">
+            <h1>API Form</h1>
+            <b>Username:</b>
+            <input
+              name="name"
+              type="text"
+              value={apiUser.name}
+              placeholder="Name"
+              className="name-input"
+              onChange={handleApiForm} />
+            <span className="error-span">{apiNameError} </span>
+            <b>Image:</b>
+            <input type="file" name="image" onChange={handleApiForm} accept="image/*" />
+            <span className="error-span">{apiImageError} </span>
+            <b>Report:</b>
+            <input type="file" name="report" onChange={handleApiForm} accept="application/pdf"  />
+            <span className="error-span">{apiReportError} </span>
+            <button type="submit">Submit</button>
+          </form>
+
         </div>
         <div className="users-card">
+          
           <ul className="users-list">
             {users.map((user) => {
               return (
@@ -199,6 +334,7 @@ const App = () => {
               </li>)
             })}
           </ul>
+
           <ul className="docs-list">
             {docsList.map((doc) => {
               return (
@@ -216,6 +352,26 @@ const App = () => {
               )
             })}
           </ul>
+
+          <ul className="api-users-list">
+            {apiUsers.map((user) => {
+              return (
+                <li key={user.id}>
+                  <img src={user.image} alt="User Avatar" className="image-card" />
+                  <h3 style={{ marginBottom: '10px' }}>{user.name}</h3> 
+                  <object
+                    className="doc-card"
+                    type="application/pdf"
+                    data={user.report}
+                    width="100%"
+                    height="80%"
+                  >{user.name}</object>
+                  <a href="#">Report Link</a>
+                {/* <a href={user.report}>Report Link</a> */}
+              </li>)
+            })}
+          </ul>
+
         </div>
       </div>
   )

@@ -66,18 +66,17 @@ code {
 
 /* Users-Styles */
 .users-card {
-  /* background-color: darkslategrey; */
-  /* background-color: rgb(232, 234, 237); */
   width: 75%;
-  height: 80vh;
+  height: auto;
   border-radius: 10px;
   margin-left: 2%;
-  /* padding: 10px 0; */
 }
 
 .users-list {
   width: 100%;
-  height: 50%;
+  max-width: 100%;
+  flex-wrap: wrap;
+  /* height: 30%; */
   display: flex;
   background-color: darkolivegreen;
   /* background-color: rgb(232, 234, 237); */
@@ -109,8 +108,10 @@ code {
 
 .docs-list {
   width: 100%;
-  height: 50%;
+  /* height: 35%; */
   display: flex;
+  max-width: 100%;
+  flex-wrap: wrap;
   background-color: darkolivegreen;
   padding: 10px;
   border-radius: 10px;
@@ -133,7 +134,7 @@ code {
   /* width: 150px;
   height: 120px;
   overflow: hidden; */
-
+  
 }
 
 a {
@@ -141,13 +142,26 @@ a {
   color: black;
 }
 
-/* Hide scrolbar for chrome, safari and opera */
-/* .doc-card::-webkit-scrollbar {
-  display: none;
-} */
+.api-users-list {
+  width: 100%;
+  max-width: 100%;
+  flex-wrap: wrap;
+  /* height: auto; */
+  display: flex;
+  background-color: darkolivegreen;
+  /* background-color: rgb(232, 234, 237); */
+  padding: 10px;
+  border-radius: 10px;
+}
 
-/* Hide scrolbar for IE, Edge and Firefox */
-/* .doc-card {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-} */
+.api-users-list li {
+  list-style-type: none;
+  /* background-color: red; */
+  width: 120px;
+  height: 120px;
+  /* display: flex; */
+  flex-direction: column;
+  place-items: center;
+  padding: 10px;
+  padding-left: 2%;
+}
